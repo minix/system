@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 require 'socket'
 require 'digest/sha1'
 require "openssl"

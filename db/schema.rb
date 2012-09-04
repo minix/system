@@ -11,15 +11,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120822015132) do
+ActiveRecord::Schema.define(:version => 20120904042235) do
 
   create_table "sys", :force => true do |t|
-    t.integer  "ip_addr",    :limit => 8
+    t.string   "ip_addr"
     t.integer  "port"
     t.string   "service"
     t.boolean  "status"
-    t.datetime "created_at",              :null => false
-    t.datetime "updated_at",              :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
 end

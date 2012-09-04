@@ -1,21 +1,20 @@
 <%= link_to "Add New Mac", controller: "home", action: "add" %><br />
 <table>
-<%#= form_for @system, url: {controller: "home", action: "status"} do |status| %>
 	<tr>
 		<th>Ip_addr </th>
 		<th>Status </th>
 		<th>Port </th>
 		<th>Process </th>
 	</tr>
-	<% @status.each do |status| %>
-	<tr>
-		<td><%= status.ip_addr %></td>
-		<td>
-			<% if status.status == true %>
-				<strong style="color:green;">Online</strong>
-			<% else %>
-				<stong style="color:red;">Faild</strong>
-			<%end %> 
+		<tr>
+		<% @status.each do |status| %>
+			<td><%= status.ip_addr %></td>
+			<td>
+				<% if status.status == true %>
+					<strong style="color:green;">Online</strong>
+				<% else %>
+					<stong style="color:red;">Faild</strong>
+			<%end %>
 		</td>
 		<td><%= status.port %></td>
 		<td>
@@ -23,6 +22,6 @@
 				<li><%= link_to "Start" , controller: "home", action: "start" %> </li>
 				<li><%= link_to "Stop" , controller: "home", action: "stop" %> </li>
 			</td>
-	</tr>
-	<% end %>
-<%# end %>
+		</tr>
+		<% end %>
+</table>

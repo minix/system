@@ -22,17 +22,16 @@ class HomeController < ApplicationController
 	end
 
 	def start
-		@system = Sys.find :all
-		@system.each do |system| 
+		@system = Sys.find(params[:id])
 		begin
-			client = TCPSocket.new(system.ip_addr, 8888)
+			client = TCPSocket.new(@system.ip_addr, 8888)
 			temp = ""
 			5.times do
 				temp << client.gets
 			end
 
 			public_key = OpenSSL::PKey::RSA.new(temp)
-			msg = "sh /home/scripts/start_#{system.service}.sh"
+			msg = "sh /home/scripts/start_#{@system.service}.sh"
 			sha1 = Digest::SHA1.hexdigest(msg)
 			command = public_key.public_encrypt("#{sha1}*#{msg}")
 			client.send(command, 0)
@@ -40,22 +39,20 @@ class HomeController < ApplicationController
 				puts e
 				retry
 			client.close
-			end
 		end
 	end
 
 	def stop
-		@system = Sys.find :all
-		@system.each do |system|
+		@system = Sys.find(params[:id])
 			begin
-			  client = TCPSocket.new(system.ip_addr, 8888)
+			  client = TCPSocket.new(@system.ip_addr, 8888)
 			  temp = ""
 			  5.times do
 			    temp << client.gets
 			  end
 			
 			  public_key = OpenSSL::PKey::RSA.new(temp)
-				msg = "sh /home/scripts/stop_#{system.service}.sh"
+				msg = "sh /home/scripts/stop_#{@system.service}.sh"
 			  sha1 = Digest::SHA1.hexdigest(msg)
 
 			  command = public_key.public_encrypt("#{sha1}*#{msg}")
@@ -65,7 +62,6 @@ class HomeController < ApplicationController
 			  retry
 				client.close
 			end
-		end
 	end
 
 	private

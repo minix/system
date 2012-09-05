@@ -2,6 +2,7 @@
 <table>
 	<tr>
 		<th>Ip_addr </th>
+		<th>Service </th>
 		<th>Status </th>
 		<th>Port </th>
 		<th>Process </th>
@@ -9,6 +10,7 @@
 		<tr>
 		<% @status.each do |status| %>
 			<td><%= status.ip_addr %></td>
+			<td><%= status.service %></td>
 			<td>
 				<% if status.status == true %>
 					<strong style="color:green;">Online</strong>
@@ -19,8 +21,8 @@
 		<td><%= status.port %></td>
 		<td>
 			<ul>
-				<li><%= link_to "Start" , controller: "home", action: "start" %> </li>
-				<li><%= link_to "Stop" , controller: "home", action: "stop" %> </li>
+				<li><%= link_to "Start" , controller: "home", action: "start", id: status.id %> </li>
+				<li><%= link_to "Stop" , controller: "home", action: "stop", id: status.id %> </li>
 			</td>
 		</tr>
 		<% end %>

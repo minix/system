@@ -1,13 +1,13 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  ip_addr: MyString
-  port: 1
-  service: MyString
+  ip_id: 1
+  server: MyString
+  port: 
   status: false
 
 two:
-  ip_addr: MyString
-  port: 1
-  service: MyString
+  ip_id: 1
+  server: MyString
+  port: 
   status: false

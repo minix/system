@@ -1,6 +1,7 @@
-<%= link_to "Add New Mac", controller: "home", action: "add" %><br />
+<%= link_to "Add New Mac", controller: "home", action: "new" %><br />
 <table>
 	<tr>
+		<th>Choose IP</th>
 		<th>Ip_addr </th>
 		<th>Service </th>
 		<th>Status </th>
@@ -8,22 +9,37 @@
 		<th>Process </th>
 	</tr>
 		<tr>
-		<% @status.each do |status| %>
-			<td><%= status.ip_addr %></td>
-			<td><%= status.service %></td>
-			<td>
-				<% if status.status == true %>
-					<strong style="color:green;">Online</strong>
-				<% else %>
-					<stong style="color:red;">Faild</strong>
-			<%end %>
-		</td>
-		<td><%= status.port %></td>
-		<td>
-			<ul>
-				<li><%= link_to "Start" , controller: "home", action: "start", id: status.id %> </li>
-				<li><%= link_to "Stop" , controller: "home", action: "stop", id: status.id %> </li>
-			</td>
-		</tr>
-		<% end %>
+			<%#= form_for :controller, url: { controller: "home", action: "index" } do |cont| %>
+				<% @status.each do |status| %>
+					<!--<td><%#= status.ip_addr %></td> -->
+					<td><%= status.server %></td>
+					<td>
+						<% if status.status == true %>
+							<strong style="color:green;">Online</strong>
+						<% else %>
+							<stong style="color:red;">Faild</strong>
+					<%end %>
+				</td>
+				<td><%= status.port %></td>
+				<td>
+					<ul>
+						<% if status.status == true %>
+							<li><span>Start</span></li>
+							<li><%= link_to "Stop" , controller: "home", action: "stop", id: status.id %> </li>
+						<% else %>
+							<li><%= link_to "Start" , controller: "home", action: "start", id: status.id %> </li>
+							<li><span>Stop</span> </li>
+						<% end %>
+							<li><%= link_to "Edit" , controller: "home", action: "edit", id: status.id %> </li>
+						<!-- 
+						<ul>
+							<li><%#= link_to "Start" , controller: "home", action: "start", id: status.id %> </li>
+							<li><%#= link_to "Stop" , controller: "home", action: "stop", id: status.id %> </li>
+						</ul> 
+						-->
+					</ul>
+				</td>
+			</tr>
+		<%# end %>
+	<% end %>
 </table>

@@ -1,3 +1,4 @@
 class Sys < ActiveRecord::Base
-  attr_accessible :ip_addr, :port, :service, :status
+	belongs_to :ip  
+  attr_accessible :ip_id, :port, :server, :status
 end

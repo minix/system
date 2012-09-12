@@ -1,0 +1,13 @@
+<%= form_for @add_dev, url: { controller: "home", action: "new" } do |f| %>
+	<%= f.label "Ip" %>
+	<%= f.text_field :ip_addr %>
+	<%= f.text_field :server %>
+	<%= f.text_field :port %>
+	<%= f.fields_for :syss_attributes do |i| %>
+		<%= i.label "Process" %>
+		<%= i.text_field :server %>
+		<%= i.label "Port" %>
+		<%= i.text_field :port %>
+	<% end %>
+	<%= f.submit "Submit" %>
+<% end %>

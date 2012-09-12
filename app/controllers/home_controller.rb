@@ -16,28 +16,22 @@ class HomeController < ApplicationController
 	end
 
 	def new
-		@add_dev = Ip.new
-		@add_dev.syss = Sys.new
-	end
+		@add_dev = Ip.new(params[:add_dev])
+		@add_dev.syss.build
+		if request.post? 
+			@add_dev.save 
+			redirect_to(controller: "home", action: "index")
+		end
+	end 
 
 	def edit
 		@mach = Sys.find(params[:id])
 	end
 
-	def updateing
+	def update
 		@mac = Ip.find(params[:id])
 		@mac.update_attributes(params[:mach])
 		redirect_to(controller: "home", action: "index")
-	end
-
-	def add
-		@add_dev = Ip.new(params[:add_dev])
-		@add_dev.syss = Sys.new(params[:syss])
-		#if request.post?
-		if 	@add_dev.save 
-			@add_dev.syss.save
-			redirect_to controller: "home", action: "index"
-		end
 	end
 
 	def start

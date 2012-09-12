@@ -1,9 +1,13 @@
-<%= form_for @add_dev, url: { controller: "home", action: "add" } do |f| %>
-	Ipaddress: <%= f.text_field :ip_addr %>
-	<%= f.fields_for :syss do |sys| %>
-		Process: <%= sys.text_field :server %>
-		Port: <%= sys.text_field :port %>
+<%= form_for :add_dev, url: { controller: "home", action: "new" } do |f| %>
+	<%= f.label "Ip" %>
+	<%= f.text_field :ip_addr %>
+	<%#将下面一行注释，只留下ip_add就是正常。看来是 fields_for的问题了 %>
+	<%#= f.fields_for :syss do |i| %>
+	<%= f.fields_for :syss do |i| %>
+		<%= i.label "Process" %>
+		<%= i.text_field :server %>
+		<%= i.label "Port" %>
+		<%= i.text_field :port %>
 	<% end %>
 	<%= f.submit "Submit" %>
 <% end %>
-

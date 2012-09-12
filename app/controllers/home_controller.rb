@@ -17,7 +17,7 @@ class HomeController < ApplicationController
 
 	def new
 		@add_dev = Ip.new
-		@add_dev.syss = Sys.new
+		@add_dev.syss.build
 	end
 
 	def edit
@@ -30,12 +30,11 @@ class HomeController < ApplicationController
 		redirect_to(controller: "home", action: "index")
 	end
 
-	def add
+	def create
 		@add_dev = Ip.new(params[:add_dev])
-		@add_dev.syss = Sys.new(params[:syss])
-		#if request.post?
-		if 	@add_dev.save 
-			@add_dev.syss.save
+		#@add_dev.syss.build
+		if request.post?
+		 	@add_dev.save 
 			redirect_to controller: "home", action: "index"
 		end
 	end

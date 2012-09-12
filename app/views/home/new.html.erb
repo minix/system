@@ -1,6 +1,6 @@
-<%= form_for @add_dev, url: { controller: "home", action: "add" } do |f| %>
+<%= form_for @add_dev, :as => 'add_dev', url: { action: "create" } do |f| %>
 	Ipaddress: <%= f.text_field :ip_addr %>
-	<%= f.fields_for :syss do |sys| %>
+	<%= f.fields_for :syss, @add_dev.syss do |sys| %>
 		Process: <%= sys.text_field :server %>
 		Port: <%= sys.text_field :port %>
 	<% end %>

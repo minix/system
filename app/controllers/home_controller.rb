@@ -18,11 +18,15 @@ class HomeController < ApplicationController
 	def new
 		@add_dev = Ip.new(params[:add_dev])
 		@add_dev.syss.build
-		if request.post? 
-			@add_dev.save 
-			redirect_to(controller: "home", action: "index")
-		end
 	end 
+
+	def create
+		@add_dev = Ip.new(params[:add_dev])
+		if request.post?
+			@add_dev.save
+			redirect_to controller: "home", action: "index"
+		end
+	end
 
 	def edit
 		@mach = Sys.find(params[:id])

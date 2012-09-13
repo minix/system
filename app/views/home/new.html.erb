@@ -1,4 +1,4 @@
-<%= form_for :add_dev, url: { controller: "home", action: "new" } do |f| %>
+<%= form_for @add_dev, as: 'add_dev', url: { controller: "home", action: "create" } do |f| %>
 	<%= f.label "Ip" %>
 	<%= f.text_field :ip_addr %>
 	<%#将下面一行注释，只留下ip_add就是正常。看来是 fields_for的问题了 %>

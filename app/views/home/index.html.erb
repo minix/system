@@ -10,36 +10,19 @@
 	</tr>
 		<tr>
 			<%#= form_for :controller, url: { controller: "home", action: "index" } do |cont| %>
-				<% @status.each do |status| %>
-					<!--<td><%#= status.ip_addr %></td> -->
+				<% @ipaddr.map(&:syss).flatten.each do |status| %>
+					<td><%#= status.ip_addr %></td>
+					<td></td>
 					<td><%= status.server %></td>
+					<td></td>
+					<td><%= status.port %></td>
 					<td>
-						<% if status.status == true %>
-							<strong style="color:green;">Online</strong>
-						<% else %>
-							<stong style="color:red;">Faild</strong>
-					<%end %>
-				</td>
-				<td><%= status.port %></td>
-				<td>
-					<ul>
-						<% if status.status == true %>
-							<li><span>Start</span></li>
-							<li><%= link_to "Stop" , controller: "home", action: "stop", id: status.id %> </li>
-						<% else %>
-							<li><%= link_to "Start" , controller: "home", action: "start", id: status.id %> </li>
-							<li><span>Stop</span> </li>
-						<% end %>
-							<li><%= link_to "Edit" , controller: "home", action: "edit", id: status.id %> </li>
-						<!-- 
 						<ul>
-							<li><%#= link_to "Start" , controller: "home", action: "start", id: status.id %> </li>
-							<li><%#= link_to "Stop" , controller: "home", action: "stop", id: status.id %> </li>
-						</ul> 
-						-->
-					</ul>
-				</td>
+							<li><%= link_to "Stop" , controller: "home", action: "stop", id: status.id %> </li>
+							<li><%= link_to "Start" , controller: "home", action: "start", id: status.id %> </li>
+						</ul>
+					</td>
 			</tr>
+				<% end %>
 		<%# end %>
-	<% end %>
 </table>

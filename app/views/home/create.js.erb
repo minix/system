@@ -1,0 +1,5 @@
+<% if @add_dev.errors.empty? %>
+	$$(".add_dev").html('<%= escape_javascript(render :partial => 'sys', :object => @add_dev) %>').hide().appendTo($('#replies table > tbody')).fadeIn('fast').css('display', 'table-row');
+<% else %>
+	$('<span class="error-message"><%= escape_javascript(@add_dev.errors.full_messages.join(',')) %></span>').appendTo($('#new_reply_form'))
+<% end %>

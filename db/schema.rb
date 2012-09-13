@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120910091630) do
+ActiveRecord::Schema.define(:version => 20120913022702) do
 
   create_table "ips", :force => true do |t|
     t.string   "ip_addr"
@@ -20,10 +20,9 @@ ActiveRecord::Schema.define(:version => 20120910091630) do
   end
 
   create_table "sys", :force => true do |t|
-    t.integer  "ip_id"
     t.string   "server"
     t.integer  "port"
-    t.boolean  "status"
+    t.integer  "ip_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end

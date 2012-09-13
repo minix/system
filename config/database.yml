@@ -15,7 +15,7 @@ development:
   database: system
   pool: 5
   username: minix
-  password: M-gtuiw
+  password: 12345678c9
   host: localhost
 
 # Warning: The database defined as "test" will be erased and

@@ -1,4 +1,4 @@
 class Sys < ActiveRecord::Base
 	belongs_to :ip
-	attr_accessible :ip_id, :server, :port
+	attr_accessible :server, :port
 end

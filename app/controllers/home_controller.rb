@@ -4,12 +4,12 @@ require 'digest/sha1'
 require "openssl"
 
 class HomeController < ApplicationController
-  def index
-		@status = Sys.find(:all)
+	def index
+		@ipaddr = Ip.joins(:syss)
 		if request.post?
 			ssl_conn
 		end
-  end
+	end
 
 	def status
 
@@ -17,17 +17,26 @@ class HomeController < ApplicationController
 
 	def new
 		@add_dev = Ip.new(params[:add_dev])
-		@add_dev.syss.build
-	end 
+		#3.times { @add_dev.syss.build }
+		@add_dev.syss.build 
+
+		respond_to do |format|
+			format.html
+			format.js
+		end
+	end
 
 	def create
 		@add_dev = Ip.new(params[:add_dev])
-		if request.post?
-			@add_dev.save
-			redirect_to controller: "home", action: "index"
+		respond_to do |format|
+			if @add_dev.save
+				format.html { redirect_to controller: "home", action: "index" }
+				format.js { render :layout => false }
+			else
+				format.html { render :new }
+				format.js { render :layout => false, :status => 406  }
+			end
 		end
-		@add_dev = Ip.new
-		@add_dev.syss.build
 	end
 
 	def edit
@@ -47,24 +56,24 @@ class HomeController < ApplicationController
 
 	def stop
 		@system = Sys.find(params[:id])
-			begin
-			  client = TCPSocket.new(@system.ip_addr, 8888)
-			  temp = ""
-			  5.times do
-			    temp << client.gets
-			  end
-			
-			  public_key = OpenSSL::PKey::RSA.new(temp)
-				msg = "sh /home/scripts/stop_#{@system.service}.sh"
-			  sha1 = Digest::SHA1.hexdigest(msg)
-
-			  command = public_key.public_encrypt("#{sha1}*#{msg}")
-			  client.send(command,0)
-			rescue => e
-			  puts e
-			  retry
-				client.close
+		begin
+			client = TCPSocket.new(@system.ip_addr, 8888)
+			temp = ""
+			5.times do
+				temp << client.gets
 			end
+
+			public_key = OpenSSL::PKey::RSA.new(temp)
+			msg = "sh /home/scripts/stop_#{@system.service}.sh"
+			sha1 = Digest::SHA1.hexdigest(msg)
+
+			command = public_key.public_encrypt("#{sha1}*#{msg}")
+			client.send(command,0)
+		rescue => e
+			puts e
+			retry
+			client.close
+		end
 	end
 
 	private
@@ -86,11 +95,10 @@ class HomeController < ApplicationController
 			sha1 = Digest::SHA1.hexdigest(msg)
 			command = public_key.public_encrypt("#{sha1}*#{msg}")
 			client.send(command, 0)
-			rescue => e
-				puts e
-				retry
+		rescue => e
+			puts e
+			retry
 			client.close
 		end
 	end
 end
-

@@ -16,7 +16,6 @@ class HomeController < ApplicationController
 	end
 
 	def new
-<<<<<<< HEAD
 		@add_dev = Ip.new(params[:add_dev])
 		@add_dev.syss.build
 	end 
@@ -27,10 +26,8 @@ class HomeController < ApplicationController
 			@add_dev.save
 			redirect_to controller: "home", action: "index"
 		end
-=======
 		@add_dev = Ip.new
 		@add_dev.syss.build
->>>>>>> 93e5fd69651b3d0342db962cc404fe1f9ae99133
 	end
 
 	def edit
@@ -43,18 +40,6 @@ class HomeController < ApplicationController
 		redirect_to(controller: "home", action: "index")
 	end
 
-<<<<<<< HEAD
-=======
-	def create
-		@add_dev = Ip.new(params[:add_dev])
-		#@add_dev.syss.build
-		if request.post?
-		 	@add_dev.save 
-			redirect_to controller: "home", action: "index"
-		end
-	end
-
->>>>>>> 93e5fd69651b3d0342db962cc404fe1f9ae99133
 	def start
 		@system = Sys.find(params[:id])
 		ssl_conn

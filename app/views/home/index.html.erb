@@ -1,28 +1,17 @@
 <%= link_to "Add New Mac", controller: "home", action: "new" %><br />
-<table>
-	<tr>
-		<th>Choose IP</th>
-		<th>Ip_addr </th>
-		<th>Service </th>
-		<th>Status </th>
-		<th>Port </th>
-		<th>Process </th>
-	</tr>
-		<tr>
-			<%#= form_for :controller, url: { controller: "home", action: "index" } do |cont| %>
-				<% @ipaddr.map(&:syss).flatten.each do |status| %>
-					<td><%#= status.ip_addr %></td>
-					<td></td>
-					<td><%= status.server %></td>
-					<td></td>
-					<td><%= status.port %></td>
-					<td>
-						<ul>
-							<li><%= link_to "Stop" , controller: "home", action: "stop", id: status.id %> </li>
-							<li><%= link_to "Start" , controller: "home", action: "start", id: status.id %> </li>
-						</ul>
-					</td>
-			</tr>
-				<% end %>
-		<%# end %>
-</table>
+<ul>
+	<% @add_dev.each do |add_dev| %>
+		<li><%= add_dev.ip_addr %><%= link_to "Edit" , controller: "home", action: "edit", id: add_dev.id %> </li><br />
+		<% Sys.where("ip_id = #{add_dev.id}").each do |server| %>
+			<% %>
+			<li><%= server.server %>: <%= server.port %></li>
+			<li>
+			<ul>
+				<li><%= link_to "Stop" , controller: "home", action: "stop", id: server.id %> </li>
+				<li><%= link_to "Start" , controller: "home", action: "start", id: server.id %> </li>
+				<li><%= link_to "Remove" , controller: "home", action: "destroy", method: "delete", id: server.id %> </li>
+			</ul>
+			</li><br />
+		<% end %><br />
+	<% end %>
+</ul>

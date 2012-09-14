@@ -2,6 +2,7 @@ System::Application.routes.draw do
   get "home/index"
 	get "home/add"
 	get "home/status"
+	get "home/destroy/:id" => "home#destroy"
 
 	resources :home
 

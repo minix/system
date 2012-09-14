@@ -32,11 +32,12 @@ class HomeController < ApplicationController
 	end
 
 	def destroy
-		@photo = Sys.find(params[:id])
-		@photo.destroy
-		respond_to do |format|
-			format.js { render nothing: true }
+		destroy_id = params[:id]
+		Sys.where("ip_id = #{destroy_id}").each do |destroy_server|
+			destroy_server.destroy
 		end
+		Ip.destroy(destroy_id)
+		flash[:notice] = "Success destroy derive!"
 		redirect_to controller: "home", action: "index"
 	end
 

@@ -1,7 +1,8 @@
 <%= link_to "Add New Mac", controller: "home", action: "new" %><br />
 <ul>
 	<% @add_dev.each do |add_dev| %>
-		<li><%= add_dev.ip_addr %><%= link_to "Edit" , controller: "home", action: "edit", id: add_dev.id %> </li><br />
+		<li><%= add_dev.ip_addr %><%= link_to "Edit" , controller: "home", action: "edit", id: add_dev.id %> </li>
+				<li><%= link_to "Remove" , controller: "home", action: "destroy", method: "delete", id: add_dev.id %> </li><br />
 		<% Sys.where("ip_id = #{add_dev.id}").each do |server| %>
 			<% %>
 			<li><%= server.server %>: <%= server.port %></li>

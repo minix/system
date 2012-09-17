@@ -65,48 +65,29 @@ class HomeController < ApplicationController
 	end
 
 	def start
-		@system = Sys.find(params[:id])
-		ssl_conn
+		@system = Sys.find_by_id(params[:id])
+		@ip = Ip.find_by_id(@system.ip_id)
+		ssl_start_conn
 	end
 
 	def stop
-		@system = Sys.find(params[:id])
-		begin
-			client = TCPSocket.new(@system.ip_addr, 8888)
-			temp = ""
-			5.times do
-				temp << client.gets
-			end
-
-			public_key = OpenSSL::PKey::RSA.new(temp)
-			msg = "sh /home/scripts/stop_#{@system.service}.sh"
-			sha1 = Digest::SHA1.hexdigest(msg)
-
-			command = public_key.public_encrypt("#{sha1}*#{msg}")
-			client.send(command,0)
-		rescue => e
-			puts e
-			retry
-			client.close
-		end
+		@system = Sys.find_by_id(params[:id])
+		@ip = Ip.find_by_id(@system.ip_id)
+		ssl_stop_conn
 	end
 
 	private
-	def real_ip(ip)
-		new_ip = IPAddr.new(ip).to_i
-		return new_ip
-	end
 
-	def ssl_conn
+	def ssl_start_conn
 		begin
-			client = TCPSocket.new(@system.ip_addr, 8888)
+			client = TCPSocket.new(@ip.ip_addr, 8888)
 			temp = ""
 			5.times do
 				temp << client.gets
 			end
 
 			public_key = OpenSSL::PKey::RSA.new(temp)
-			msg = "sh /home/scripts/start_#{@system.service}.sh"
+			msg = "sh /home/scripts/start_#{@system.server}.sh"
 			sha1 = Digest::SHA1.hexdigest(msg)
 			command = public_key.public_encrypt("#{sha1}*#{msg}")
 			client.send(command, 0)
@@ -114,6 +95,26 @@ class HomeController < ApplicationController
 			puts e
 			retry
 			client.close
+		end
+	end
+
+	def ssl_stop_conn
+		begin
+			client = TCPSocket.new(@ip.ip_addr, 8888)
+			temp = ""
+			5.times do
+				temp << client.gets
+			end
+			public_key = OpenSSL::PKey::RSA.new(temp)
+			msg = "sh /home/scripts/stop_#{@system.server}.sh"
+			sha1 = Digest::SHA1.hexdigest(msg)
+
+			command = public_key.public_encrypt("#{sha1}*#{msg}")
+			client.send(command,0)
+			client.close
+		rescue => e
+			puts e
+			retry
 		end
 	end
 end

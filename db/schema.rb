@@ -21,10 +21,12 @@ ActiveRecord::Schema.define(:version => 20120913022702) do
 
   create_table "sys", :force => true do |t|
     t.string   "server"
+    t.string   "oid"
     t.integer  "port"
     t.integer  "ip_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.boolean  "status",     :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
 end

@@ -3,9 +3,10 @@ class CreateSys < ActiveRecord::Migration
     create_table :sys do |t|
 
       t.string :server
+			t.string :oid, defautl: 0
       t.integer :port
 			t.integer :ip_id
-      #t.boolean :status
+      t.boolean :status, default: 0
       t.timestamps
     end
   end

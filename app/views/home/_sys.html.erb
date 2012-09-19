@@ -4,6 +4,7 @@
 		<p>
 			Server: <%= sys_stat.text_field :server %>
 			Port: <%= sys_stat.text_field :port %>
+			<%= sys_stat.hidden_field :oid %>
 		</p>
 	<% end %>
 <%# end %>

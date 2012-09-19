@@ -8,6 +8,13 @@
 			<li><%= server.server %>: <%= server.port %></li>
 			<li>
 			<ul>
+				<li>
+					<% if server.status == 1 %> 
+						<strong> Faild </strong>
+					<% else %>
+						<strong>Online</strong>
+					<% end %>
+				</li>
 				<li><%= link_to "Stop" , controller: "home", action: "stop", id: server.id %> </li>
 				<li><%= link_to "Start" , controller: "home", action: "start", id: server.id %> </li>
 				<li><%= link_to "Remove" , controller: "home", action: "destroy", method: "delete", id: server.id %> </li>

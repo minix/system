@@ -42,7 +42,10 @@ class HomeController < ApplicationController
 	end
 
 	def create
+		@custom_oid = ('0'..'9').to_a.shuffle[0..3].join
+		@oid_value = ".1.3.6.1.4.2021.#{@custom_oid}"
 		@add_dev = Ip.new(params[:add_dev])
+		params[:add_dev][:oid] = @oid_value
 		respond_to do |format|
 			if @add_dev.save
 				format.html { redirect_to controller: "home", action: "index" }
@@ -68,12 +71,16 @@ class HomeController < ApplicationController
 		@system = Sys.find_by_id(params[:id])
 		@ip = Ip.find_by_id(@system.ip_id)
 		ssl_start_conn
+		flash[:notice] = "Start success!"
+		redirect_to controller: "home", action: "index"
 	end
 
 	def stop
 		@system = Sys.find_by_id(params[:id])
 		@ip = Ip.find_by_id(@system.ip_id)
 		ssl_stop_conn
+		flash[:notice] = "Stop Success!"
+		redirect_to controller: "home", action: "index"
 	end
 
 	private
@@ -85,9 +92,9 @@ class HomeController < ApplicationController
 			5.times do
 				temp << client.gets
 			end
-
 			public_key = OpenSSL::PKey::RSA.new(temp)
-			msg = "sh /home/scripts/start_#{@system.server}.sh"
+			msg = "ftp://192.168.186.129/snmp/#{@system.server}.sh /home/scripts/"
+			msg += " && sh /home/scripts/start_#{@system.server}.sh"
 			sha1 = Digest::SHA1.hexdigest(msg)
 			command = public_key.public_encrypt("#{sha1}*#{msg}")
 			client.send(command, 0)
@@ -106,7 +113,8 @@ class HomeController < ApplicationController
 				temp << client.gets
 			end
 			public_key = OpenSSL::PKey::RSA.new(temp)
-			msg = "sh /home/scripts/stop_#{@system.server}.sh"
+			msg = "ftp://192.168.186.129/snmp/#{@system.server}.sh /home/scripts/"
+			msg += "sh /home/scripts/stop_#{@system.server}.sh"
 			sha1 = Digest::SHA1.hexdigest(msg)
 
 			command = public_key.public_encrypt("#{sha1}*#{msg}")
@@ -117,4 +125,23 @@ class HomeController < ApplicationController
 			retry
 		end
 	end
+
+#	def oid
+#		config_file = File.open("/etc/snmp/snmpd.conf", "a+")
+#		server_name = self.server
+#		custom_oid = ('0'..'9').to_a.shufflt[0..3].join
+#		self.oid = server_oid = ".1.3.6.1.4.2021.#{custom_oid}"
+#
+#		config_file << "extend #{server_oid} #{server_name} /bin/sh /home/script/#{server_name}_status.sh"
+#
+#		status_file = File.new("#{server_name}_status\.sh")
+#		script_str = <<"EOF" 
+##!/usr/bin/env sh
+##
+#serv_name=`pgrep #{server.server}`
+#echo $?
+#EOF
+#	status_file << script_str
+#	end
+	
 end

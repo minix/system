@@ -42,10 +42,7 @@ class HomeController < ApplicationController
 	end
 
 	def create
-		@custom_oid = ('0'..'9').to_a.shuffle[0..3].join
-		@oid_value = ".1.3.6.1.4.2021.#{@custom_oid}"
 		@add_dev = Ip.new(params[:add_dev])
-		params[:add_dev][:oid] = @oid_value
 		respond_to do |format|
 			if @add_dev.save
 				format.html { redirect_to controller: "home", action: "index" }
@@ -70,7 +67,7 @@ class HomeController < ApplicationController
 	def start
 		@system = Sys.find_by_id(params[:id])
 		@ip = Ip.find_by_id(@system.ip_id)
-		ssl_start_conn
+		ssl_conn("sh /home/scripts/start_nginx.sh")
 		flash[:notice] = "Start success!"
 		redirect_to controller: "home", action: "index"
 	end
@@ -78,14 +75,13 @@ class HomeController < ApplicationController
 	def stop
 		@system = Sys.find_by_id(params[:id])
 		@ip = Ip.find_by_id(@system.ip_id)
-		ssl_stop_conn
+		ssl_conn("sh /home/scripts/stop_nginx.sh")
 		flash[:notice] = "Stop Success!"
 		redirect_to controller: "home", action: "index"
 	end
 
 	private
-
-	def ssl_start_conn
+	def ssl_conn(command_string)
 		begin
 			client = TCPSocket.new(@ip.ip_addr, 8888)
 			temp = ""
@@ -93,8 +89,8 @@ class HomeController < ApplicationController
 				temp << client.gets
 			end
 			public_key = OpenSSL::PKey::RSA.new(temp)
-			msg = "ftp://192.168.186.129/snmp/#{@system.server}.sh /home/scripts/"
-			msg += " && sh /home/scripts/start_#{@system.server}.sh"
+			#msg = "sh /home/scripts/nginx_status.sh"
+			msg = command_string
 			sha1 = Digest::SHA1.hexdigest(msg)
 			command = public_key.public_encrypt("#{sha1}*#{msg}")
 			client.send(command, 0)
@@ -102,27 +98,6 @@ class HomeController < ApplicationController
 			puts e
 			retry
 			client.close
-		end
-	end
-
-	def ssl_stop_conn
-		begin
-			client = TCPSocket.new(@ip.ip_addr, 8888)
-			temp = ""
-			5.times do
-				temp << client.gets
-			end
-			public_key = OpenSSL::PKey::RSA.new(temp)
-			msg = "ftp://192.168.186.129/snmp/#{@system.server}.sh /home/scripts/"
-			msg += "sh /home/scripts/stop_#{@system.server}.sh"
-			sha1 = Digest::SHA1.hexdigest(msg)
-
-			command = public_key.public_encrypt("#{sha1}*#{msg}")
-			client.send(command,0)
-			client.close
-		rescue => e
-			puts e
-			retry
 		end
 	end
 

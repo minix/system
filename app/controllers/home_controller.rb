@@ -1,4 +1,3 @@
-require 'ipaddr'
 require 'socket'
 require 'digest/sha1'
 require "openssl"
@@ -6,10 +5,9 @@ require "openssl"
 class HomeController < ApplicationController
 	def index
 		@add_dev = Ip.find :all
-
-		if request.post?
-			ssl_conn
-		end
+		#if request.post?
+		#	ssl_conn
+		#end
 	end
 
 	def status
@@ -19,7 +17,6 @@ class HomeController < ApplicationController
 	def new
 		@add_dev = Ip.new(params[:add_dev])
 		3.times { @add_dev.syss.build }
-		#@add_dev.syss.build 
 
 		respond_to do |format|
 			format.html
@@ -44,7 +41,12 @@ class HomeController < ApplicationController
 	def create
 		@add_dev = Ip.new(params[:add_dev])
 		respond_to do |format|
-			if @add_dev.save
+	 		if @add_dev.save
+			@ip = Ip.find_by_id(@add_dev)
+			Sys.where("ip_id = #{@ip.id}").each do |oid_add|
+				ssl_conn("echo \"extend #{oid_add.server} /bin/sh /home/script/#{oid_add.server}_status.sh\" >> /etc/snmp/snmpd.conf")
+				#ssl_conn("echo #{oid_add.server}")
+			end
 				format.html { redirect_to controller: "home", action: "index" }
 				format.js { render :layout => false }
 			else
@@ -81,6 +83,7 @@ class HomeController < ApplicationController
 	end
 
 	private
+
 	def ssl_conn(command_string)
 		begin
 			client = TCPSocket.new(@ip.ip_addr, 8888)
@@ -101,22 +104,4 @@ class HomeController < ApplicationController
 		end
 	end
 
-#	def oid
-#		config_file = File.open("/etc/snmp/snmpd.conf", "a+")
-#		server_name = self.server
-#		custom_oid = ('0'..'9').to_a.shufflt[0..3].join
-#		self.oid = server_oid = ".1.3.6.1.4.2021.#{custom_oid}"
-#
-#		config_file << "extend #{server_oid} #{server_name} /bin/sh /home/script/#{server_name}_status.sh"
-#
-#		status_file = File.new("#{server_name}_status\.sh")
-#		script_str = <<"EOF" 
-##!/usr/bin/env sh
-##
-#serv_name=`pgrep #{server.server}`
-#echo $?
-#EOF
-#	status_file << script_str
-#	end
-	
 end

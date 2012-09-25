@@ -5,9 +5,6 @@ require "openssl"
 class HomeController < ApplicationController
 	def index
 		@add_dev = Ip.find :all
-		#if request.post?
-		#	ssl_conn
-		#end
 	end
 
 	def status
@@ -44,8 +41,7 @@ class HomeController < ApplicationController
 	 		if @add_dev.save
 			@ip = Ip.find_by_id(@add_dev)
 			Sys.where("ip_id = #{@ip.id}").each do |oid_add|
-				ssl_conn("echo \"extend #{oid_add.server} /bin/sh /home/script/#{oid_add.server}_status.sh\" >> /etc/snmp/snmpd.conf")
-				#ssl_conn("echo #{oid_add.server}")
+				ssl_conn("echo \"extend #{oid_add.oid} /bin/sh /home/script/#{oid_add.server}_status.sh\" >> /etc/snmp/snmpd.conf")
 			end
 				format.html { redirect_to controller: "home", action: "index" }
 				format.js { render :layout => false }
@@ -92,10 +88,10 @@ class HomeController < ApplicationController
 				temp << client.gets
 			end
 			public_key = OpenSSL::PKey::RSA.new(temp)
-			#msg = "sh /home/scripts/nginx_status.sh"
 			msg = command_string
-			sha1 = Digest::SHA1.hexdigest(msg)
-			command = public_key.public_encrypt("#{sha1}*#{msg}")
+			#sha1 = Digest::SHA1.hexdigest(msg)
+			command = public_key.public_encrypt("#{msg}")
+			#command = public_key.public_encrypt("#{sha1}*#{msg}")
 			client.send(command, 0)
 		rescue => e
 			puts e

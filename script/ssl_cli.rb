@@ -23,7 +23,7 @@ begin
   command = public_key.public_encrypt("#{sha1}*#{msg}")
   print "Sending the command...."
 
-  client.send(command,0)
+  client.sendmsg(command,0)
 
   puts "sent!"
 rescue => e

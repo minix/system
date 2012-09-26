@@ -42,9 +42,9 @@ class HomeController < ApplicationController
 		@more_control = Ip.find_by_id(params[:remove_ids])
 		@more_control.each do |more_control|
 			Sys.where("ip_id = #{more_control.id}").each do |destroy_control|
-				destroy_control.destroy_all
+				destroy_control.destroy
 			end
-			Ip.destroy_all(more_control)
+			Ip.destroy(more_control)
 		end
 		
 	end

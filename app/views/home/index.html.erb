@@ -1,5 +1,5 @@
 <%= link_to "Add New Mac", controller: "home", action: "new" %><br />
-<%= form_for :more_control, url: { controller: "home", action: "destroy_more"}, method: "get" do |contr| %>
+<%= form_tag  controller: "home", action: "destroy_more",  method: "get" do |contr| %>
 <ul>
 	<% @add_dev.each do |add_dev| %>
 		<li><%= check_box_tag "remove_ids[]", add_dev.id %><%= add_dev.ip_addr %><%= link_to "Edit" , controller: "home", action: "edit", id: add_dev.id %> </li>
@@ -15,5 +15,5 @@
 			</li><br />
 		<% end %><br />
 	<% end %>
-	<%= contr.submit "Remove" %>
+	<%= submit_tag "Remove" %>
 <% end %>

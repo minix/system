@@ -1,9 +1,0 @@
-<%# for sys in @add_dev.syss %>
-<%#= f.fields_for :syss do |i| %>
-	<%= fields_for "add_dev[syss_attributes][]", sys do |sys_stat| %>
-		<p>
-			Server: <%= sys_stat.text_field :server %>
-			Port: <%= sys_stat.text_field :port %>
-		</p>
-	<% end %>
-<%# end %>

@@ -1,25 +1,19 @@
 <%= link_to "Add New Mac", controller: "home", action: "new" %><br />
+<%= form_for :more_control, url: { controller: "home", action: "destroy_more"}, method: "get" do |contr| %>
 <ul>
 	<% @add_dev.each do |add_dev| %>
-		<li><%= add_dev.ip_addr %><%= link_to "Edit" , controller: "home", action: "edit", id: add_dev.id %> </li>
-				<li><%= link_to "Remove" , controller: "home", action: "destroy", method: "delete", id: add_dev.id %> </li><br />
+		<li><%= check_box_tag "remove_ids[]", add_dev.id %><%= add_dev.ip_addr %><%= link_to "Edit" , controller: "home", action: "edit", id: add_dev.id %> </li>
+		<li><%= link_to "Remove" , controller: "home", action: "destroy", method: "delete", id: add_dev.id %> </li><br />
 		<% Sys.where("ip_id = #{add_dev.id}").each do |server| %>
-			<% %>
-			<li><%= server.server %>: <%= server.port %></li>
 			<li>
-			<ul>
-				<li>
-					<% if server.status == 1 %> 
-						<strong> Faild </strong>
-					<% else %>
-						<strong>Online</strong>
-					<% end %>
-				</li>
-				<li><%= link_to "Stop" , controller: "home", action: "stop", id: server.id %> </li>
-				<li><%= link_to "Start" , controller: "home", action: "start", id: server.id %> </li>
-				<li><%= link_to "Remove" , controller: "home", action: "destroy", method: "delete", id: server.id %> </li>
-			</ul>
+				<ul>
+					<li><%= server.server %>: <%= server.port %></li>
+					<li><%= link_to "Stop" , controller: "home", action: "stop", id: server.id %> </li> 
+					<li><%= link_to "Start" , controller: "home", action: "start", id: server.id %> </li> 
+					<li><%= link_to "Remove" , controller: "home", action: "destroy", method: "delete", id: server.id %> </li> 
+				</ul>
 			</li><br />
 		<% end %><br />
 	<% end %>
-</ul>
+	<%= contr.submit "Remove" %>
+<% end %>

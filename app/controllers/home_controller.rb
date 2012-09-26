@@ -7,8 +7,11 @@ class HomeController < ApplicationController
 		@add_dev = Ip.find :all
 	end
 
-	def status
+	def more_control
+		@more_control = Ip.find(params[:more_control])
+		@more_control.each do |more_control|
 
+		end
 	end
 
 	def new
@@ -35,6 +38,17 @@ class HomeController < ApplicationController
 		redirect_to controller: "home", action: "index"
 	end
 
+	def destroy_more
+		@more_control = Ip.find_by_id(params[:remove_ids])
+		@more_control.each do |more_control|
+			Sys.where("ip_id = #{more_control.id}").each do |destroy_control|
+				destroy_control.destroy_all
+			end
+			Ip.destroy_all(more_control)
+		end
+		
+	end
+
 	def create
 		@add_dev = Ip.new(params[:add_dev])
 		respond_to do |format|
@@ -53,7 +67,8 @@ class HomeController < ApplicationController
 	end
 
 	def edit
-		@mach = Sys.find(params[:id])
+		@ip = Ip.find_by_id(params[:id])
+		@mach = Sys.where("ip_id = #{@ip.id}")
 	end
 
 	def update

@@ -38,15 +38,26 @@ class HomeController < ApplicationController
 		redirect_to controller: "home", action: "index"
 	end
 
-	def destroy_more
-		@more_control = Ip.find(params[:remove_ids])
+	def control_more
+		@more_control = Ip.find(params[:process_more_ids])
+		@ip = Ip.find_by_id(params[:process_more_ids])
 		@more_control.each do |more_control|
-			Sys.where("ip_id = #{more_control.id}").each do |destroy_control|
-				destroy_control.destroy
+			@control_process = Sys.where("ip_id = #{more_control.id}")
+			if params[:commit] === 'Remove'
+				@control_process.each do |destroy_control|
+					destroy_control.destroy
+				end
+				Ip.destroy(more_control)
+			elsif params[:commit] === 'Start'
+				@control_process.each do |start_more|
+					ssl_conn("sh /home/scripts/start_#{start_more.server}.sh")
+				end
+			elsif params[:commit] === 'Stop'
+				@control_process.each do |stop_more|
+					ssl_conn("sh /home/scripts/stop_#{stop_more.server}.sh")
+				end
 			end
-			Ip.destroy(more_control)
 		end
-		
 	end
 
 	def create

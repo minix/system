@@ -1,7 +1,6 @@
-<%= form_for :mach, :url => { :controller => "home", :action => "update", :id => @mach } do |f| %>
+<%= form_for :mach, url: { controller: "home", action: "update", id: @mach }, html: { method: :put } do |f| %>
 	<p>
-	<%#= f.label "IP" %>
-	<%#= f.text_field :ip_addr %>
+	IP: <strong><%= @ip.ip_addr %></strong>
 	</p>
 	<p>
 	<%= f.label "Process" %>
@@ -11,5 +10,5 @@
 	<%= f.label "Port" %>
 	<%= f.text_field :port %>
 	</p>
-	<%= f.submit %>
+	<%= f.submit "Update" %>
 <% end %>

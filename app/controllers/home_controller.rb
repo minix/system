@@ -7,13 +7,6 @@ class HomeController < ApplicationController
 		@add_dev = Ip.find :all
 	end
 
-	def more_control
-		@more_control = Ip.find(params[:more_control])
-		@more_control.each do |more_control|
-
-		end
-	end
-
 	def new
 		@add_dev = Ip.new(params[:add_dev])
 		3.times { @add_dev.syss.build }
@@ -79,17 +72,20 @@ class HomeController < ApplicationController
 
 	def edit
 		@ip = Ip.find_by_id(params[:id])
-		@mach = Sys.where("ip_id = #{@ip.id}")
+		@mac = Sys.select(:all).where("ip_id = #{@ip.id}")
 	end
 
 	def update
-		@mac = Sys.find(params[:id])
-		@mac.update_attributes(params[:mach])
+		@mach = Sys.find(params[:mach].keys)
+		@mach.each do |mach|
+			mach.update_attributes!(params[:mach][mach.id.to_s].reject { |k, v| v.blank? })
+		end
+		flash[:notice] = "Update Success!"
 		redirect_to(controller: "home", action: "index")
 	end
 
 	def start
-		@system = Sys.find_by_id(params[:id])
+		@system = Sys.find(params[:id])
 		@ip = Ip.find_by_id(@system.ip_id)
 		ssl_conn("sh /home/scripts/start_nginx.sh")
 		flash[:notice] = "Start success!"

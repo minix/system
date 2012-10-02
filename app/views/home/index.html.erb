@@ -1,19 +1,15 @@
 <%= link_to "Add New Mac", controller: "home", action: "new" %><br />
-<%= form_tag  controller: "home", action: "control_more" do |contr| %>
-<ul>
+<%= form_tag  controller: "home", action: "destroy_more",  method: "get" do |contr| %>
 	<% @add_dev.each do |add_dev| %>
-		<li><%= check_box_tag "process_more_ids[]", add_dev.id %><%= add_dev.ip_addr %>
-		<%= link_to "Edit" , controller: "home", action: "edit", id: add_dev.id %> </li>
-		<li><%= link_to "Remove" , controller: "home", action: "destroy", method: "delete", id: add_dev.id %> </li><br />
+		<strong onclick="toggle_visible('divQOTD<%= add_dev.id %>')" ><%= check_box_tag "remove_ids[]", add_dev.id %><%= add_dev.ip_addr %><%= link_to "Edit" , controller: "home", action: "edit", id: add_dev.id %> <%= link_to "Remove" , controller: "home", action: "destroy", method: "delete", id: add_dev.id %></strong><br />
+		<ul id="divQOTD<%= add_dev.id %>">
 		<% Sys.where("ip_id = #{add_dev.id}").each do |server| %>
 			<li>
-				<ul>
-					<li><%= server.server %>: <%= server.port %></li>
-					<li><%= link_to "Stop" , controller: "home", action: "stop", id: server.id %> </li> 
-					<li><%= link_to "Start" , controller: "home", action: "start", id: server.id %> </li> 
-				</ul>
-			</li><br />
-		<% end %><br />
+				<%= server.server %>: <%= server.port %> <%= link_to "Stop" , controller: "home", action: "stop", id: server.id %> <%= link_to "Start" , controller: "home", action: "start", id: server.id %> 
+				</li>
+				<br />
+		<% end %>
+		</ul>
 	<% end %>
-	<%= submit_tag "Remove" %> <%= submit_tag "Start" %> <%= submit_tag "Stop" %>
+	<%= submit_tag "Remove" %>
 <% end %>

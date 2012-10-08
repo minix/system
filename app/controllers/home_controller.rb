@@ -3,6 +3,9 @@ require 'digest/sha1'
 require "openssl"
 
 class HomeController < ApplicationController
+
+	RE = %r/(?:[^:\-]|\A)(?:[0-9A-F][0-9A-F][:\-]){5}[0-9A-F][0-9A-F](?:[^:\-]|\Z)/io                
+
 	def index
 		@add_dev = Ip.find :all
 	end
@@ -56,11 +59,11 @@ class HomeController < ApplicationController
 	def create
 		@add_dev = Ip.new(params[:add_dev])
 		respond_to do |format|
-	 		if @add_dev.save
-			@ip = Ip.find_by_id(@add_dev)
-			Sys.where("ip_id = #{@ip.id}").each do |oid_add|
-				ssl_conn("echo \"extend #{oid_add.oid} /bin/sh /home/script/#{oid_add.server}_status.sh\" >> /etc/snmp/snmpd.conf")
-			end
+			if @add_dev.save
+				@ip = Ip.find_by_id(@add_dev)
+				Sys.where("ip_id = #{@ip.id}").each do |oid_add|
+					ssl_conn("echo \"extend #{oid_add.oid} /bin/sh /home/script/#{oid_add.server}_status.sh\" >> /etc/snmp/snmpd.conf")
+				end
 				format.html { redirect_to controller: "home", action: "index" }
 				format.js { render :layout => false }
 			else
@@ -102,24 +105,38 @@ class HomeController < ApplicationController
 
 	private
 
+
 	def ssl_conn(command_string)
-		begin
-			client = TCPSocket.new(@ip.ip_addr, 8888)
-			temp = ""
-			5.times do
-				temp << client.gets
-			end
-			public_key = OpenSSL::PKey::RSA.new(temp)
-			msg = command_string
-			#sha1 = Digest::SHA1.hexdigest(msg)
-			command = public_key.public_encrypt("#{msg}")
-			#command = public_key.public_encrypt("#{sha1}*#{msg}")
-			client.send(command, 0)
-		rescue => e
-			puts e
-			retry
-			client.close
-		end
+
+		platform = RUBY_PLATFORM.downcase                                                                
+		output = `#{platform =~ /linux/ ? '/sbin/ifconfig' : 'ifconfig'}`                                
+
+		begin                                                                                            
+			client = TCPSocket.open(@ip.ip_addr, 8888)                                                     
+			macaddr = parse(output)                                                                        
+			client.print macaddr.pack("m")                                                                 
+			temp = ""                                                                                      
+			5.times do                                                                                     
+				temp << client.gets                                                                          
+			end                                                                                            
+			puts "Received public 1024 RSA key!\n\n"                                                       
+			public_key = OpenSSL::PKey::RSA.new(temp)                                                      
+
+			msg = command_string                                                                           
+			command = public_key.public_encrypt("#{msg}")                                                  
+			client.send(command,0)                                                                         
+		rescue => e                                                                                      
+			puts e                                                                                         
+			retry                                                                                          
+		end                                                                                              
+		client.close      
 	end
+
+	def parse(output)                                                                                
+		lines = output.split(/\n/)                                                                     
+		candidates = lines.select{|line| line =~ RE}                                                   
+		raise 'no mac address candidates' unless candidates.first                                      
+		candidates.map!{|c| c[RE].strip}                                                               
+	end                                                                                              
 
 end

@@ -3,8 +3,9 @@ System::Application.routes.draw do
 	get "home/add"
 	get "home/status"
 	get "home/destroy/:id" => "home#destroy"
+	get "home/:id/edit" => "home#edit"
 
-	resources :home
+	#resources :control_more, :collection => { :edit_individual => :post, :update_individual => :put }
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

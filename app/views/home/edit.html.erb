@@ -1,14 +1,9 @@
-<%= form_for :mach, url: { controller: "home", action: "update", id: @mach }, html: { method: :put } do |f| %>
-	<p>
-	IP: <strong><%= @ip.ip_addr %></strong>
-	</p>
-	<p>
-	<%= f.label "Process" %>
-	<%= f.text_field :server %>
-	</p>
-	<p>
-	<%= f.label "Port" %>
-	<%= f.text_field :port %>
-	</p>
-	<%= f.submit "Update" %>
+<h1>Edit Multi Server</h1>
+<%= form_tag "update", :method => :put do %>
+	<% for product in @products %>
+		<%= fields_for "process_more_ids[]", product do |f| %>
+			<%= render partial: "fields", locals: { f: f } %>
+		<% end %>
+	<% end %>
+	<p><%= submit_tag "Submit" %></p>
 <% end %>

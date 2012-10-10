@@ -3,7 +3,7 @@ ul {list-style-type:none; }
 ul li { float:left; }
 
 #main_box{ width:1000px; height:900px; margin:0 auto; position:relative; }
-.ip_list{ height:1.4em; width:100%; background-color:#FFF6BF; }
+.ip_list{ height:1.4em; width:100%; background-color:#EFF3FA; }
 .ip_checkbox{ float:right; }
-.ip_service{ text-indent:16px; }
+.ip_service{ text-indent:14px; width:100%; font-size:14px;}
 .process_button{ }

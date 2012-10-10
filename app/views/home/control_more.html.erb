@@ -1,0 +1,15 @@
+<%= form_for controller: "home", action: "update", :method => :put do %>
+	<% for product in @products %>
+		<%= fields_for "process_more_ids[]", product do |f| %>
+			<p>
+			<%= f.label :server %><br />
+			<%= f.text_field :server %>
+			</p>
+			<p>
+			<%= f.label :port %><br />
+			<%= f.text_field :port %>
+			</p>
+		<% end %>
+	<% end %>
+	<p><%= submit_tag "Submit" %></p>
+<% end %>

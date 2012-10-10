@@ -34,6 +34,23 @@ class HomeController < ApplicationController
 		redirect_to controller: "home", action: "index"
 	end
 
+	def create
+		@add_dev = Ip.new(params[:add_dev])
+		respond_to do |format|
+			if @add_dev.save
+				@ip = Ip.find_by_id(@add_dev)
+				Sys.where("ip_id = #{@ip.id}").each do |oid_add|
+					ssl_conn("echo \"extend #{oid_add.oid} /bin/sh /home/script/#{oid_add.server}_status.sh\" >> /etc/snmp/snmpd.conf")
+				end
+				format.html { redirect_to controller: "home", action: "index" }
+				format.js { render :layout => false }
+			else
+				format.html { render :new }
+				format.js { render :layout => false, :status => 406  }
+			end
+		end
+	end
+
 	def control_more
 		@more_control = Ip.find(params[:process_more_ids])
 		@ip = Ip.find_by_id(params[:process_more_ids])
@@ -52,39 +69,28 @@ class HomeController < ApplicationController
 				@control_process.each do |stop_more|
 					ssl_conn("sh /home/scripts/stop_#{stop_more.server}.sh")
 				end
-			end
-		end
-	end
-
-	def create
-		@add_dev = Ip.new(params[:add_dev])
-		respond_to do |format|
-			if @add_dev.save
-				@ip = Ip.find_by_id(@add_dev)
-				Sys.where("ip_id = #{@ip.id}").each do |oid_add|
-					ssl_conn("echo \"extend #{oid_add.oid} /bin/sh /home/script/#{oid_add.server}_status.sh\" >> /etc/snmp/snmpd.conf")
+			elsif params[:commit] === 'Edit'
+				params[:process_more_ids].each do |process_more_id|
+					@products = Sys.where("ip_id = #{process_more_id}")
+						render controller: "home", action: "edit" 
+					return
 				end
-				format.html { redirect_to controller: "home", action: "index" }
-				format.js { render :layout => false }
-			else
-				format.html { render :new }
-				format.js { render :layout => false, :status => 406  }
 			end
 		end
 	end
 
 	def edit
-		@ip = Ip.find_by_id(params[:id])
-		@mac = Sys.select(:all).where("ip_id = #{@ip.id}")
+		@products = Sys.find(params[:process_more_ids])
 	end
 
 	def update
-		@mach = Sys.find(params[:mach].keys)
-		@mach.each do |mach|
-			mach.update_attributes!(params[:mach][mach.id.to_s].reject { |k, v| v.blank? })
+		@products = Sys.update(params[:products].keys, params[:products].values).reject { |p| p.errors.empty? }
+		if @products.empty?
+			flash[:notice] = "Service updated"
+			redirect_to controller: "home", action: "index"
+		else
+			#render :action => "edit"
 		end
-		flash[:notice] = "Update Success!"
-		redirect_to(controller: "home", action: "index")
 	end
 
 	def start
@@ -104,7 +110,6 @@ class HomeController < ApplicationController
 	end
 
 	private
-
 
 	def ssl_conn(command_string)
 
@@ -138,5 +143,4 @@ class HomeController < ApplicationController
 		raise 'no mac address candidates' unless candidates.first                                      
 		candidates.map!{|c| c[RE].strip}                                                               
 	end                                                                                              
-
 end

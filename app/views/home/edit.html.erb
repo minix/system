@@ -1,9 +1,17 @@
 <h1>Edit Multi Server</h1>
 <%= form_tag "update", :method => :put do %>
-	<% for product in @products %>
-		<%= fields_for "process_more_ids[]", product do |f| %>
-			<%= render partial: "fields", locals: { f: f } %>
-		<% end %>
-	<% end %>
-	<p><%= submit_tag "Submit" %></p>
+	<table class="alerts">
+		<tbody>
+			<tr class="header">
+				<th>Server</th>
+				<th>Port</th>
+			</tr>
+			<% for product in @products %>
+				<%= fields_for "process_more_ids[]", product do |f| %>
+					<tr><td><%= render partial: "fields", locals: { f: f } %></td></tr>
+				<% end %>
+			<% end %>
+		</tbody>
+	</table>
+	<p><%= submit_tag "Update" %></p>
 <% end %>

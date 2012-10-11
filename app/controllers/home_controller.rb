@@ -70,11 +70,9 @@ class HomeController < ApplicationController
 					ssl_conn("sh /home/scripts/stop_#{stop_more.server}.sh")
 				end
 			elsif params[:commit] === 'Edit'
-				params[:process_more_ids].each do |process_more_id|
-					@products = Sys.where("ip_id = #{process_more_id}")
-						render controller: "home", action: "edit" 
-					return
-				end
+				@products = Sys.where(ip_id: params[:process_more_ids])
+				render controller: "home", action: "edit" 
+				return
 			end
 		end
 	end

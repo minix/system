@@ -82,7 +82,7 @@ class HomeController < ApplicationController
 	end
 
 	def update
-		@products = Sys.update(params[:products].keys, params[:products].values).reject { |p| p.errors.empty? }
+		@products = Sys.update(params[:process_more_ids].keys, params[:process_more_ids].values).reject { |p| p.errors.empty? }
 		if @products.empty?
 			flash[:notice] = "Service updated"
 			redirect_to controller: "home", action: "index"

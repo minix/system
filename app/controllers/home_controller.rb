@@ -59,6 +59,7 @@ class HomeController < ApplicationController
 			if params[:commit] === 'Remove'
 				@control_process.each do |destroy_control|
 					destroy_control.destroy
+					ssl_conn("sed -i '/#{destroy_control.oid}/d' /etc/snmp/snmpd.conf")
 				end
 				Ip.destroy(more_control)
 			elsif params[:commit] === 'Start'

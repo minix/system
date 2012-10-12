@@ -75,6 +75,9 @@ class HomeController < ApplicationController
 				return
 			end
 		end
+		flash[:notice] = "Success!"
+		redirect_to home: "home", action: "index"
+		return 
 	end
 
 	def edit
@@ -91,21 +94,21 @@ class HomeController < ApplicationController
 		end
 	end
 
-#	def start
-#		@system = Sys.find(params[:id])
-#		@ip = Ip.find_by_id(@system.ip_id)
-#		ssl_conn("sh /home/scripts/start_nginx.sh")
-#		flash[:notice] = "Start success!"
-#		redirect_to controller: "home", action: "index"
-#	end
-#
-#	def stop
-#		@system = Sys.find_by_id(params[:id])
-#		@ip = Ip.find_by_id(@system.ip_id)
-#		ssl_conn("sh /home/scripts/stop_nginx.sh")
-#		flash[:notice] = "Stop Success!"
-#		redirect_to controller: "home", action: "index"
-#	end
+	#	def start
+	#		@system = Sys.find(params[:id])
+	#		@ip = Ip.find_by_id(@system.ip_id)
+	#		ssl_conn("sh /home/scripts/start_nginx.sh")
+	#		flash[:notice] = "Start success!"
+	#		redirect_to controller: "home", action: "index"
+	#	end
+	#
+	#	def stop
+	#		@system = Sys.find_by_id(params[:id])
+	#		@ip = Ip.find_by_id(@system.ip_id)
+	#		ssl_conn("sh /home/scripts/stop_nginx.sh")
+	#		flash[:notice] = "Stop Success!"
+	#		redirect_to controller: "home", action: "index"
+	#	end
 
 	private
 
@@ -141,4 +144,5 @@ class HomeController < ApplicationController
 		raise 'no mac address candidates' unless candidates.first                                      
 		candidates.map!{|c| c[RE].strip}                                                               
 	end                                                                                              
+
 end

@@ -40,7 +40,7 @@ class HomeController < ApplicationController
 			if @add_dev.save
 				@ip = Ip.find_by_id(@add_dev)
 				Sys.where("ip_id = #{@ip.id}").each do |oid_add|
-					ssl_conn("echo \"extend #{oid_add.oid} /bin/sh /home/script/#{oid_add.server}_status.sh\" >> /etc/snmp/snmpd.conf")
+					ssl_conn("echo \"extend #{oid_add.oid} /bin/sh /home/scripts/#{oid_add.server}_status.sh\" >> /etc/snmp/snmpd.conf")
 				end
 				format.html { redirect_to controller: "home", action: "index" }
 				format.js { render :layout => false }
@@ -95,21 +95,21 @@ class HomeController < ApplicationController
 		end
 	end
 
-	#	def start
-	#		@system = Sys.find(params[:id])
-	#		@ip = Ip.find_by_id(@system.ip_id)
-	#		ssl_conn("sh /home/scripts/start_nginx.sh")
-	#		flash[:notice] = "Start success!"
-	#		redirect_to controller: "home", action: "index"
-	#	end
-	#
-	#	def stop
-	#		@system = Sys.find_by_id(params[:id])
-	#		@ip = Ip.find_by_id(@system.ip_id)
-	#		ssl_conn("sh /home/scripts/stop_nginx.sh")
-	#		flash[:notice] = "Stop Success!"
-	#		redirect_to controller: "home", action: "index"
-	#	end
+	def start
+		@system = Sys.find(params[:id])
+		@ip = Ip.find_by_id(@system.ip_id)
+		ssl_conn("sh /home/scripts/start_nginx.sh")
+		flash[:notice] = "Start success!"
+		redirect_to controller: "home", action: "index"
+	end
+	
+	def stop
+		@system = Sys.find_by_id(params[:id])
+		@ip = Ip.find_by_id(@system.ip_id)
+		ssl_conn("sh /home/scripts/stop_nginx.sh")
+		flash[:notice] = "Stop Success!"
+		redirect_to controller: "home", action: "index"
+	end
 
 	private
 

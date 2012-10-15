@@ -5,16 +5,18 @@
 				<div class="ip_list"><%= check_box_tag "process_more_ids[]", add_dev.id, false,  :class => 'ip_checkbox' %><strong onclick="toggle_visible('divQ<%= add_dev.id %>')"><%= add_dev.ip_addr %> </strong> </div>
 				<ul id="divQ<%= add_dev.id %>">
 					<% Sys.where("ip_id = #{add_dev.id}").each do |server| %>
-						<li class="ip_service">
-						<%= server.server %>: <%= server.port %>
-						<%= link_to "Stop" , controller: "home", action: "stop", id: server.id %> 
-						<%= link_to "Start" , controller: "home", action: "start", id: server.id %> 
-						</li> 
-						<br />
+						<% if server.server.blank? === false %>
+							<li class="ip_service">
+							<%= server.server %>: <%= server.port %>
+							<%= link_to "Stop" , controller: "home", action: "stop", id: server.id %> 
+							<%= link_to "Start" , controller: "home", action: "start", id: server.id %> 
+							</li> 
+							<br />
+						<% end %>
 					<% end %>
 				</ul>
 			<% end %>
-			<%= submit_tag "Remove" %><%= submit_tag "Start" %><%= submit_tag "Stop" %><%= submit_tag "Edit" %>
+			<%= submit_tag "Remove", :confirm => "Are you sure", remote: true, disable_with: 'Loading...' %><%= submit_tag "Start" %><%= submit_tag "Stop" %><%= submit_tag "Edit" %>
 		<% end %>
 	</div>
 </div>

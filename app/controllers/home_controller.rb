@@ -40,8 +40,11 @@ class HomeController < ApplicationController
 			if @add_dev.save
 				@ip = Ip.find_by_id(@add_dev)
 				Sys.where("ip_id = #{@ip.id}").each do |oid_add|
-					ssl_conn("echo \"extend #{oid_add.oid} /bin/sh /home/scripts/#{oid_add.server}_status.sh\" >> /etc/snmp/snmpd.conf")
+					if oid_add.server.empty? === false
+						ssl_conn("echo \"extend #{oid_add.oid} #{oid_add.server}_s /bin/sh /home/scripts/#{oid_add.server}_status.sh\" >> /etc/snmp/snmpd.conf")
+					end
 				end
+				ssl_conn("/etc/init.d/snmpd restart")
 				format.html { redirect_to controller: "home", action: "index" }
 				format.js { render :layout => false }
 			else

@@ -35,6 +35,7 @@ class HomeController < ApplicationController
 	end
 
 	def create
+		mach_stat params[:add_dev][:ip_addr]
 		@add_dev = Ip.new(params[:add_dev])
 		respond_to do |format|
 			if @add_dev.save
@@ -105,7 +106,7 @@ class HomeController < ApplicationController
 		flash[:notice] = "Start success!"
 		redirect_to controller: "home", action: "index"
 	end
-	
+
 	def stop
 		@system = Sys.find_by_id(params[:id])
 		@ip = Ip.find_by_id(@system.ip_id)
@@ -148,5 +149,13 @@ class HomeController < ApplicationController
 		raise 'no mac address candidates' unless candidates.first                                      
 		candidates.map!{|c| c[RE].strip}                                                               
 	end                                                                                              
+
+	def mach_stat(mach)
+		abort "Host maybe don't Up" if system("ping -c 1 #{mach}") === false
+	end
+
+	def error_500
+		render text: "Host maybe don't Up"
+	end
 
 end

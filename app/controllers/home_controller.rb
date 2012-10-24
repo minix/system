@@ -12,7 +12,8 @@ class HomeController < ApplicationController
 
 	def new
 		@add_dev = Ip.new(params[:add_dev])
-		3.times { @add_dev.syss.build }
+		#3.times { @add_dev.syss.build }
+		@add_dev.syss.build
 
 		respond_to do |format|
 			format.html
@@ -47,7 +48,7 @@ class HomeController < ApplicationController
 				end
 				ssl_conn("/etc/init.d/snmpd restart")
 				format.html { redirect_to controller: "home", action: "index" }
-				format.js { render :layout => false }
+				format.js 
 			else
 				format.html { render :new }
 				format.js { render :layout => false, :status => 406  }
@@ -57,7 +58,7 @@ class HomeController < ApplicationController
 
 	def control_more
 		@more_control = Ip.find(params[:process_more_ids])
-		@ip = Ip.find_by_id(params[:process_more_ids])
+		#@ip = Ip.find_by_id(params[:process_more_ids])
 		@more_control.each do |more_control|
 			@control_process = Sys.where("ip_id = #{more_control.id}")
 			if params[:commit] === 'Remove'

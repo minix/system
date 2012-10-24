@@ -5,7 +5,7 @@
 				<div class="ip_list"><%= check_box_tag "process_more_ids[]", add_dev.id, false,  :class => 'ip_checkbox' %><strong onclick="toggle_visible('divQ<%= add_dev.id %>')"><%= add_dev.ip_addr %> </strong></div>
 				<ul id="divQ<%= add_dev.id %>">
 					<% Sys.where("ip_id = #{add_dev.id}").each do |server| %>
-						<% if server.server.blank? === false %>
+						<%# if server.server.blank? === false %>
 							<li class="ip_service">
 							<%= server.server %>: <%= server.port %>
 							<%= link_to "Stop" , controller: "home", action: "stop", id: server.id %> 
@@ -13,7 +13,7 @@
 							<span><%= server.status %></span>
 							</li> 
 							<br />
-						<% end %>
+						<%# end %>
 					<% end %>
 				</ul>
 			<% end %>

@@ -15,4 +15,11 @@ module HomeHelper
 		#	return ".1.3.6.1.4.1.2021.#{custom_oid}.#{custom_a_oid}"
 		#end
 	end
+
+	def add_dev_link(name)
+		link_to_function name, nil do |page|
+			page.insert_html :bottom, partial: 'sys', object: Sys.new
+		end
+	end
 end
+

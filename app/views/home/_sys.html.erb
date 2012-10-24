@@ -1,7 +1,5 @@
 <%= fields_for "add_dev[syss_attributes][]", sys do |sys_stat| %>
-	<p>
 	Server: <%= sys_stat.text_field :server %>
 	Port: <%= sys_stat.text_field :port %>
 	<%= sys_stat.hidden_field :oid, value: get_oid %>
-	</p>
 <% end %>

@@ -1,9 +1,9 @@
 <%= form_for @add_dev, as: 'add_dev', url: { controller: "home", action: "create" } do |f| %>
 	<%= f.label "Ip" %>
 	<%= f.text_field :ip_addr %>
-	<div class="add_dev">
-		<%= render partial: "sys", collection: @add_dev.syss %>
-	</div>
-	<%= link_to 'Add', :remote => true %>
+	<ul id="add_dev">
+		<li><%= render partial: "sys", collection: @add_dev.syss %></li>
+	<%= link_to "Add Another", "#add", id: "add-another" %>
+	</ul>
 	<%= f.submit "Submit" %>
 <% end %>

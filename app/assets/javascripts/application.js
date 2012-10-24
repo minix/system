@@ -28,3 +28,7 @@ $(document).ready(function() {
 //		  alert('You need at least one invite.')
 //			  });
 });
+
+function on_hide(){
+  document.getElementById("content_process").style.display = (document.getElementById("ip_checkbox").checked == true) ? "block" : "none";
+}

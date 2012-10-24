@@ -1,23 +1,31 @@
 <div id="main_box">
-<%= link_to "Add New Mac", { controller: "home", action: "new"}, class: "add_new_botton" %>
-	<div class="server_data "><%= form_tag controller: "home", action: "control_more" do |contr| %>
+	<%= link_to "Add New Mac", { controller: "home", action: "new"}, class: "add_new_botton" %>
+	<div class="server_data ">
+		<%= form_tag controller: "home", action: "control_more" do |contr| %>
+				<ul class="ip_list">
 			<% @add_dev.each do |add_dev| %>
-				<div class="ip_list"><%= check_box_tag "process_more_ids[]", add_dev.id, false,  :class => 'ip_checkbox' %><strong onclick="toggle_visible('divQ<%= add_dev.id %>')"><%= add_dev.ip_addr %> </strong></div>
-				<ul id="divQ<%= add_dev.id %>">
-					<% Sys.where("ip_id = #{add_dev.id}").each do |server| %>
-						<%# if server.server.blank? === false %>
-							<li class="ip_service">
-							<%= server.server %>: <%= server.port %>
-							<%= link_to "Stop" , controller: "home", action: "stop", id: server.id %> 
-							<%= link_to "Start" , controller: "home", action: "start", id: server.id %> 
-							<span><%= server.status %></span>
-							</li> 
-							<br />
-						<%# end %>
-					<% end %>
-				</ul>
+				<%= check_box_tag "process_more_ids[]", add_dev.id, false, id: :ip_checkbox, onclick: "on_hide();" %>
+					<strong onclick="toggle_visible('divQ<%= add_dev.id %>')"><%= add_dev.ip_addr %> </strong>
+					<li>
+						<ul id="divQ<%= add_dev.id %>">
+							<% Sys.where("ip_id = #{add_dev.id}").each do |server| %>
+								<li class="ip_service">
+									<%= server.server %>: <%= server.port %>
+									<%= link_to "Stop" , controller: "home", action: "stop", id: server.id %> 
+									<%= link_to "Start" , controller: "home", action: "start", id: server.id %> 
+									<span><%= server.status %></span>
+								</li> 
+							<% end %>
+						</ul>
+					</li>
 			<% end %>
-			<%= submit_tag "Remove", :confirm => "Are you sure", remote: true, disable_with: 'Loading...' %><%= submit_tag "Start" %><%= submit_tag "Stop" %><%= submit_tag "Edit" %>
-		<% end %>
-	</div>
+		</ul>
+		<div id="content_process", style="display:none;">
+			<%= submit_tag "Remove", :confirm => "Are you sure", remote: true, disable_with: 'Loading...' %>
+			<%= submit_tag "Start" %>
+			<%= submit_tag "Stop" %>
+			<%= submit_tag "Edit" %>
+		</div>
+	<% end %>
+</div>
 </div>

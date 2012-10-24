@@ -58,7 +58,7 @@ class HomeController < ApplicationController
 
 	def control_more
 		@more_control = Ip.find(params[:process_more_ids])
-		#@ip = Ip.find_by_id(params[:process_more_ids])
+		@ip = Ip.find_by_id(params[:process_more_ids])
 		@more_control.each do |more_control|
 			@control_process = Sys.where("ip_id = #{more_control.id}")
 			if params[:commit] === 'Remove'

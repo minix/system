@@ -4,8 +4,8 @@
 		<%= form_tag controller: "home", action: "control_more" do |contr| %>
 				<ul class="ip_list">
 			<% @add_dev.each do |add_dev| %>
-				<%= check_box_tag "process_more_ids[]", add_dev.id, false, id: :ip_checkbox, onclick: "on_hide();" %>
-					<strong onclick="toggle_visible('divQ<%= add_dev.id %>')"><%= add_dev.ip_addr %> </strong>
+				<div class="main_ip"><%= check_box_tag "process_more_ids[]", add_dev.id, false, id: "ip_checkbox", onclick: "validate();" %>
+					<strong id="ip_list" onclick="toggle_visible('divQ<%= add_dev.id %>')"><%= add_dev.ip_addr %> </strong></div>
 					<li>
 						<ul id="divQ<%= add_dev.id %>">
 							<% Sys.where("ip_id = #{add_dev.id}").each do |server| %>

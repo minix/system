@@ -29,6 +29,22 @@ $(document).ready(function() {
 //			  });
 });
 
-function on_hide(){
-  document.getElementById("content_process").style.display = (document.getElementById("ip_checkbox").checked == true) ? "block" : "none";
+
+function validate()
+{
+	var chks = document.getElementsByName('process_more_ids[]');
+	for (var i = 0; i < chks.length; i++)
+	{
+		if (chks[i].checked)
+		{
+			document.getElementById("content_process").style.display = "block"
+			break;
+		}
+		else
+		{
+			document.getElementById("content_process").style.display = "none"
+		}
+	}
+	return true;
 }
+
